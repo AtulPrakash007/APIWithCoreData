@@ -9,16 +9,19 @@
 import Foundation
 
 struct Variants {
-    var id: String?
+    var id: Int?
     var name: String?
-    var size: String?
-    var price: String?
+    var size: Int?
+    var price: Int?
 }
 
 struct Products {
-    var id: String?
+    var id: Int?
     var name: String?
     var variants: [Variants]
+    var like_count: Int?
+    var view_count: Int?
+    var shared_count: Int?
 }
 
 struct ChildCategories {
@@ -26,39 +29,84 @@ struct ChildCategories {
 }
 
 struct Categories {
-    var id: String?
+    var id: Int?
     var name: String?
     var products: [Products]
-    var childCategories: [ChildCategories]
+    var childCategories: [Int]
 }
 
-class Category {
-    var id: String?
-    var name: String?
-    var products = [Products]()
-    var childCategories = [ChildCategories]()
+class MapData {
+    var items = [Category]()
     
     init?(data: Data) {
         do {
-            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let body = json["categories"] as? [String: Any] {
-                
-                print(body)
-//                self.fullName = body["fullName"] as? String
-//                self.pictureUrl = body["pictureUrl"] as? String
-//                self.about = body["about"] as? String
-//                self.email = body["email"] as? String
-//
-//                if let friends = body["friends"] as? [[String: Any]] {
-//                    self.friends = friends.map { Friend(json: $0) }
-//                }
-//
-//                if let profileAttributes = body["profileAttributes"] as? [[String: Any]] {
-//                    self.profileAttributes = profileAttributes.map { Attribute(json: $0) }
-//                }
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                if let body = json["categories"] as? [[String: Any]] {
+                    print(body)
+                    self.items = body.map { Category(json: $0) }
+                }
             }
         } catch {
             print("Error deserializing JSON: \(error)")
             return nil
         }
+    }
+    
+}
+
+class Category {
+    var id: Int?
+    var name: String?
+    var products = [Product]()
+    var childCategories = [Int]()
+    
+    init(json: [String: Any]) {
+        self.id = json["id"] as? Int
+        self.name = json["name"] as? String
+        
+        if let products = json["products"] as? [[String: Any]] {
+            self.products = products.map { Product(json: $0) }
+        }
+        
+        if let child = json["child_categories"] as? [Int] {
+            self.childCategories = child
+        }
+        
+    }
+    
+}
+
+class Product {
+    var id: Int?
+    var name: String?
+    var variants = [Variant]()
+    var like_count: Int?
+    var view_count: Int?
+    var shared_count: Int?
+    
+    init(json: [String: Any]) {
+        self.id = json["id"] as? Int
+        self.name = json["name"] as? String
+        
+        if let variants = json["variants"] as? [[String: Any]] {
+            self.variants = variants.map { Variant(json: $0) }
+        }
+        self.like_count = 0
+        self.view_count = 0
+        self.shared_count = 0
+    }
+}
+
+class Variant {
+    var id: Int?
+    var color: String?
+    var size: Int?
+    var price: Int?
+    
+    init(json: [String: Any]) {
+        self.id = json["id"] as? Int
+        self.color = json["color"] as? String
+        self.size = json["size"] as? Int
+        self.price = json["price"] as? Int
     }
 }

@@ -20,41 +20,22 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hr3-vj-DG2">
-                        <rect key="frame" x="8" y="11" width="264" height="21"/>
+                        <rect key="frame" x="8" y="11" width="42" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTb-sm-QIz">
-                        <rect key="frame" x="280" y="9" width="25" height="25"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="25" id="MW0-8K-7cC"/>
-                            <constraint firstAttribute="width" constant="25" id="zyt-6z-17G"/>
-                        </constraints>
-                        <state key="normal" image="add"/>
-                        <connections>
-                            <action selector="expandAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="goC-rB-P1u"/>
-                        </connections>
-                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottomMargin" secondItem="hr3-vj-DG2" secondAttribute="bottom" constant="3.5" id="AKT-0a-PBs"/>
-                    <constraint firstItem="ZTb-sm-QIz" firstAttribute="leading" secondItem="hr3-vj-DG2" secondAttribute="trailing" constant="8" id="Atc-Hl-3Ht"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="ZTb-sm-QIz" secondAttribute="bottom" constant="1.5" id="KaX-Qj-UYa"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="ZTb-sm-QIz" secondAttribute="trailing" constant="7" id="aE0-Hp-9oc"/>
                     <constraint firstItem="hr3-vj-DG2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="eCM-Wm-KPL"/>
-                    <constraint firstItem="ZTb-sm-QIz" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="1" id="hS2-NG-FvQ"/>
                     <constraint firstItem="hr3-vj-DG2" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="3" id="pLd-3b-8OX"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="expandBtn" destination="ZTb-sm-QIz" id="cHh-0n-Z3P"/>
                 <outlet property="label" destination="hr3-vj-DG2" id="YWY-aR-4NI"/>
             </connections>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="add" width="32" height="32"/>
-    </resources>
 </document>
