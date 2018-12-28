@@ -61,7 +61,6 @@
 		042BB5B221D1531F000EB5EA = {
 			isa = PBXGroup;
 			children = (
-				048C427A21D65F50006BEAA9 /* Heady.json */,
 				048C426D21D5F9FE006BEAA9 /* Model */,
 				048C426C21D5F9F2006BEAA9 /* Api Request */,
 				048C426121D4EE93006BEAA9 /* View */,
@@ -86,6 +85,7 @@
 				042BB5C221D15320000EB5EA /* Main.storyboard */,
 				042BB5C821D15320000EB5EA /* Assets.xcassets */,
 				042BB5CA21D15320000EB5EA /* LaunchScreen.storyboard */,
+				048C427A21D65F50006BEAA9 /* Heady.json */,
 				042BB5CD21D15320000EB5EA /* Info.plist */,
 				042BB5C521D15320000EB5EA /* APIWithCoreData.xcdatamodeld */,
 			);
