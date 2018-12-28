@@ -23,6 +23,7 @@
 		048C427721D64711006BEAA9 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048C427621D64711006BEAA9 /* NetworkManager.swift */; };
 		048C427921D655C8006BEAA9 /* ProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048C427821D655C8006BEAA9 /* ProductModel.swift */; };
 		048C427C21D65FBB006BEAA9 /* RequestLocal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048C427B21D65FBB006BEAA9 /* RequestLocal.swift */; };
+		0496E80121D667E700397C78 /* Heady.json in Resources */ = {isa = PBXBuildFile; fileRef = 048C427A21D65F50006BEAA9 /* Heady.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -183,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				042BB5CC21D15320000EB5EA /* LaunchScreen.storyboard in Resources */,
+				0496E80121D667E700397C78 /* Heady.json in Resources */,
 				042BB5C921D15320000EB5EA /* Assets.xcassets in Resources */,
 				042BB5C421D15320000EB5EA /* Main.storyboard in Resources */,
 				048C427121D62EB8006BEAA9 /* CustomTableViewCell.xib in Resources */,

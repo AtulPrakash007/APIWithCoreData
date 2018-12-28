@@ -34,18 +34,19 @@ class ViewController: UIViewController {
 
     func getData() {
         
-        guard let data = dataFromFile("Heady") else {
-            return
+        if let path = Bundle.main.path(forResource: "Heady", ofType: "json") {
+            do {
+                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let body = json["categories"] as? [String: Any] {
+                    
+                    print(body)
+                }
+            } catch {
+                print("Error deserializing JSON: \(error)")
+                // handle error
+            }
         }
         
-        do {
-            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let body = json["categories"] as? [String: Any] {
-            
-                print(body)
-            }
-        } catch {
-            print("Error deserializing JSON: \(error)")
-        }
         /*
         if NetworkManager.isReachable() {
             Request.sharedInstance.request(url: "https://stark-spire-93433.herokuapp.com/json", method: "GET", params: [:], completion: { (dict, error) in
