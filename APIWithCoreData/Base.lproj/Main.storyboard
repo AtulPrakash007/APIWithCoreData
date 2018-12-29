@@ -25,6 +25,9 @@
                                     <segment title="Most Ordered"/>
                                     <segment title="Most Shared"/>
                                 </segments>
+                                <connections>
+                                    <action selector="SegmentAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="Ndp-bn-7Tl"/>
+                                </connections>
                             </segmentedControl>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qn1-Ng-Rub">
                                 <rect key="frame" x="16" y="115" width="343" height="552"/>
@@ -112,6 +115,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="qn1-Ng-Rub" id="bZz-5b-Z9z"/>
+                        <outlet property="showHideBtn" destination="Ykc-Kk-BIr" id="Gz5-Cs-JfI"/>
                         <outlet property="sideView" destination="LMD-IG-Kkt" id="8fp-6i-bga"/>
                         <outlet property="tableView" destination="Gi9-vw-eDw" id="CHA-Dh-pBD"/>
                         <outlet property="viewXConstraint" destination="pdm-XY-M7B" id="5Zr-eH-jqd"/>

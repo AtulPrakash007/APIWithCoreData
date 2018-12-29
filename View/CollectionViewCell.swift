@@ -17,7 +17,15 @@ class CollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+        cellSetup()
+    }
+    
+    func cellSetup() {
+        self.layer.cornerRadius = self.frame.size.width/5
+        self.layer.borderColor = UIColor.gray.cgColor
+        self.layer.borderWidth = 1
+        self.layer.masksToBounds = true
     }
 
 }

@@ -13,13 +13,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var sideView: UIView!
+    @IBOutlet weak var showHideBtn: UIButton!
+    
     @IBOutlet weak var viewXConstraint: NSLayoutConstraint!
+    
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
     var items = [Categories]()
     var cItems = [Category]()
     var pItems = [Product]()
     var selectedCat = [Int]()
     var childIds = [Int]()
+    var rankings = [[Int]]()
+    var selectedSegmentIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,100 +47,51 @@ class ViewController: UIViewController {
     }
 
     func getData() {
-        if let path = Bundle.main.path(forResource: "Heady", ofType: "json") {
-            do {
-                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                    if let body = json["categories"] as? [[String: Any]] {
-//                        print(body)
-                        self.cItems = body.map { Category(json: $0) }
-                    }
-                }
-            } catch {
-                print("Error deserializing JSON: \(error)")
-                // handle error
-            }
-        }
-        print(cItems.count)
-        
-        let count1 = cItems.reduce(0) { $0 + $1.products.count }
-        print(count1)
-        fetchProduct(all: true, single: false)
-//        print(cItems.filter{$0.id == 1}.map{$0.products.count})
-//        print(cItems.filter{$0.id == 1 && $0.id == 2})
-//        print(cItems.map{$0.products.count})
-
-   /*
-        if let path = Bundle.main.path(forResource: "Heady", ofType: "json") {
-            do {
-                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let categories = json["categories"] as? Array<Any>{
-//                    let rankings = json["rankings"] as? Array<Any>
-                    
-                    if categories.count > 0 {
-                        for index in 0...categories.count - 1 {
-                            let category = categories[index] as? [String: Any]
-                            let cId = category!["id"] as? Int
-                            let cName = category!["name"] as? String
-                            
-                            var products = [Products]()
-                            if let productInfo = category!["products"] as? Array<Any> {
-                                for p in 0...productInfo.count-1 {
-                                    let productItem = productInfo[p] as? [String: Any]
-                                    let pId = productItem!["id"] as? Int
-                                    let pName = productItem!["name"] as? String
-                                    
-                                    var variants = [Variants]()
-                                    if let variantInfo = productItem!["variants"] as? Array<Any> {
-                                        for v in 0...variantInfo.count-1 {
-                                            let variantItem = variantInfo[v] as? [String: Any]
-                                            let vItem = Variants(id: variantItem!["id"] as? Int,
-                                                                 name: variantItem!["color"] as? String,
-                                                                 size: variantItem!["size"] as? Int,
-                                                                 price: variantItem!["price"] as? Int)
-                                            variants.append(vItem)
-                                        }
-                                    }
-                                    
-                                    let pItem = Products(id: pId, name: pName, variants: variants, like_count: 0, view_count: 0, shared_count: 0)
-                                    products.append(pItem)
-                                }
-                            }
-                            
-                            let childInfo = category!["child_categories"] as! Array<Int>
-//                            var childs = [ChildCategories]()
-//                            if childInfo.count > 0 {
-//
-//                            }
-//                            let pId = productInfo["id"]
-//                            let pName = productInfo["name"]
-                            print(childInfo)
-                            let cItem = Categories(id: cId, name: cName, products: products, childCategories: childInfo)
-                            items.append(cItem)
-                        }
-                    }
-                }
-            } catch {
-                print("Error deserializing JSON: \(error)")
-                // handle error
-            }
-        }
-        */
-        /*
+        startAnimating()
         if NetworkManager.isReachable() {
-            Request.sharedInstance.request(url: "https://stark-spire-93433.herokuapp.com/json", method: "GET", params: [:], completion: { (dict, error) in
+            Request.sharedInstance.request(url: "https://stark-spire-93433.herokuapp.com/json", method: "GET", params: [:], completion: { (json, error) in
                 DispatchQueue.main.async {
                     if error == nil {
-                        if let catArray = dict!["categories"] as? [String: Any] {
-                            for categories in catArray {
-                                print(categories)
-                            }
+                        if let body = json![kCategories] as? [[String: Any]] {
+                            self.cItems = body.map { Category(json: $0) }
                         }
+                        if let ranking = json![kRankings] as? [[String: Any]] {
+                            self.getRanking(json: ranking)
+                        }
+                    }else {
+                        self.stopAnimating()
                     }
                 }
             })
+        }else {
+            if let path = Bundle.main.path(forResource: "Heady", ofType: "json") {
+                do {
+                    let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                        if let body = json[kCategories] as? [[String: Any]] {
+//                        print(body)
+                            self.cItems = body.map { Category(json: $0) }
+                        }
+                        if let ranking = json[kRankings] as? [[String: Any]] {
+                            getRanking(json: ranking)
+                        }
+                    }
+                } catch {
+                    print("Error deserializing JSON: \(error)")
+                    // handle error
+                }
+            }
+            self.stopAnimating()
         }
-        */
+        
+        print(cItems.count)
+        
+//        let count1 = cItems.reduce(0) { $0 + $1.products.count }
+//        print(count1)
+//        fetchProduct(all: true, single: false)
+//        print(cItems.filter{$0.id == 1}.map{$0.products.count})
+//        print(cItems.filter{$0.id == 1 && $0.id == 2})
+//        print(cItems.map{$0.products.count})
     }
     
     func fetchProduct(all isAll: Bool, single isSingle: Bool) {
@@ -161,15 +118,44 @@ class ViewController: UIViewController {
                 }
             }
         }
-        
+        sortProductList(forSegment: selectedSegmentIndex)
         collectionView.reloadData()
     }
     
-    func getSelectedIds(forIndex: IndexPath) {
-        if cItems[forIndex.row].products.count > 0 {
-            selectedCat.append(cItems[forIndex.row].id!)
+    func getRanking(json: [[String: Any]]) {
+        for value in 0...json.count - 1 {
+            switch  json[value][kRanking] as! String {
+            case kMostViewed:
+                let arr = json[value][kProducts] as! [[String: Int]]
+                let sortedArray = (arr as NSArray).sortedArray(using: [NSSortDescriptor(key: kViewCount, ascending: false)]) as! [[String: Int]]
+                let value:[Int] = sortedArray.map{$0[kId]!}
+                rankings.append(value)
+//                print(sortedArray)
+//                print(value)
+//                print(kMostViewed)
+            case kMostOrdered:
+                let arr = json[value][kProducts] as! [[String: Int]]
+                let sortedArray = (arr as NSArray).sortedArray(using: [NSSortDescriptor(key: kOrderCount, ascending: false)]) as! [[String: Int]]
+                let value:[Int] = sortedArray.map{$0[kId]!}
+                rankings.append(value)
+            case kMostShared:
+                let arr = json[value][kProducts] as! [[String: Int]]
+                let sortedArray = (arr as NSArray).sortedArray(using: [NSSortDescriptor(key: kSharedCount, ascending: false)]) as! [[String: Int]]
+                let value:[Int] = sortedArray.map{$0[kId]!}
+                rankings.append(value)
+            default:
+                print("No Ranking")
+            }
+        }
+        fetchProduct(all: true, single: false)
+        self.stopAnimating()
+    }
+    
+    func getSelectedIds(forIndex: Int) {
+        if cItems[forIndex].products.count > 0 {
+            selectedCat.append(cItems[forIndex].id!)
         } else {
-            childIds = cItems[forIndex.row].childCategories
+            childIds = cItems[forIndex].childCategories
             getSubIDs(from: childIds)
         }
         print(selectedCat)
@@ -190,14 +176,23 @@ class ViewController: UIViewController {
         }
     }
     
+    func sortProductList(forSegment: Int) {
+        let sorted = pItems.map{$0.id!}.reorder(by: rankings[forSegment])
+        let ordering = Dictionary(uniqueKeysWithValues: sorted.enumerated().map { ($1, $0) })
+        pItems = pItems.sorted{ ordering[$0.id!]! < ordering[$1.id!]! }
+    }
+    
     func viewSetUp(hideView: Bool) {
         if !hideView {
+            showHideBtn.setTitle("Filter Hide", for: .normal)
             sideView.isHidden = false
 //            viewXConstraint.constant = 0
         }else {
+            showHideBtn.setTitle("Filter Show", for: .normal)
             sideView.isHidden = true
 //            viewXConstraint.constant = self.sideView.frame.size.width
         }
+        tableView.reloadData()
     }
     
     func registerCollectionViewCell() {
@@ -213,9 +208,26 @@ class ViewController: UIViewController {
         }
     }
     
+    func startAnimating() {
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = .gray
+        view.addSubview(activityIndicator)
+        
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+    }
+    
+    func stopAnimating() {
+        activityIndicator.stopAnimating()
+        UIApplication.shared.endIgnoringInteractionEvents()
+    }
+    
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         viewSetUp(hideView: true)
     }
+    
+    //MARK:- Button Action
     
     @IBAction func sideMenuAction(_ sender: UIButton) {
         if !sideView.isHidden{
@@ -225,8 +237,26 @@ class ViewController: UIViewController {
         }
     }
     
-
+    @IBAction func SegmentAction(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            selectedSegmentIndex = 0
+            print(kMostViewed)
+        case 1:
+            selectedSegmentIndex = 1
+           print(kMostOrdered)
+        case 2:
+            selectedSegmentIndex = 2
+            print(kMostShared)
+        default:
+            print("No Action")
+        }
+        sortProductList(forSegment: selectedSegmentIndex)
+        collectionView.reloadData()
+    }
 }
+
+
 
 //MARK: - UICollectionViewDelegate
 
@@ -251,12 +281,20 @@ extension ViewController: UICollectionViewDataSource {
         let cellItem = pItems[indexPath.section].variants[indexPath.item]
         if let color = cellItem.color {
             cell.colorLbl.text = color
+        }else{
+            cell.colorLbl.text = "NA"
         }
+        
         if let size = cellItem.size {
             cell.sizeLbl.text = String(size)
+        }else {
+            cell.sizeLbl.text = "NA"
         }
+        
         if let price = cellItem.price {
             cell.priceLbl.text = String(price)
+        }else{
+            cell.priceLbl.text = "NA"
         }
         
         return cell
@@ -283,14 +321,19 @@ extension ViewController: UICollectionViewDataSource {
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cItems.count
+        return cItems.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
         
         let tableCell = tableView.dequeueReusableCell(withIdentifier: String(describing: CustomTableViewCell.self), for: indexPath) as! CustomTableViewCell
-        tableCell.label.text = cItems[indexPath.row].name
+        if indexPath.row == 0 {
+            tableCell.label.text = "All"
+        }else {
+            tableCell.label.text = cItems[indexPath.row - 1].name
+        }
+        
         cell = tableCell
         cell?.selectionStyle = .none
         return cell!
@@ -302,7 +345,11 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCat.removeAll()
-        getSelectedIds(forIndex: indexPath)
+        if indexPath.row == 0 {
+            fetchProduct(all: true, single: false)
+        }else {
+            getSelectedIds(forIndex: indexPath.row - 1)
+        }
         self.viewSetUp(hideView: true)
     }
 }

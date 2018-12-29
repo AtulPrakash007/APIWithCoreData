@@ -110,3 +110,13 @@ class Variant {
         self.price = json["price"] as? Int
     }
 }
+
+class Ranking {
+    var id: Int?
+    var count: Int?
+    
+    init(json: [String: Any]) {
+        self.id = json["id"] as? Int
+        self.count = json["color"] as? Int
+    }
+}
