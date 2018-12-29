@@ -74,10 +74,6 @@
 		042BB5B221D1531F000EB5EA = {
 			isa = PBXGroup;
 			children = (
-				041AFBAF21D7951700A60CCA /* Category */,
-				048C426D21D5F9FE006BEAA9 /* Model */,
-				048C426C21D5F9F2006BEAA9 /* Api Request */,
-				048C426121D4EE93006BEAA9 /* View */,
 				042BB5BD21D1531F000EB5EA /* APIWithCoreData */,
 				042BB5BC21D1531F000EB5EA /* Products */,
 			);
@@ -94,6 +90,10 @@
 		042BB5BD21D1531F000EB5EA /* APIWithCoreData */ = {
 			isa = PBXGroup;
 			children = (
+				041AFBAF21D7951700A60CCA /* Category */,
+				048C426D21D5F9FE006BEAA9 /* Model */,
+				048C426C21D5F9F2006BEAA9 /* Api Request */,
+				048C426121D4EE93006BEAA9 /* View */,
 				042BB5BE21D15320000EB5EA /* AppDelegate.swift */,
 				042BB5C021D15320000EB5EA /* ViewController.swift */,
 				042BB5C221D15320000EB5EA /* Main.storyboard */,
