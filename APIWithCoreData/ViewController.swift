@@ -10,16 +10,21 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    /**
+     * Outlet Connection
+     */
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var sideView: UIView!
     @IBOutlet weak var showHideBtn: UIButton!
     
-    @IBOutlet weak var viewXConstraint: NSLayoutConstraint!
     
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
-    var items = [Categories]()
+    /**
+     * Hold API Values variables
+     * Also variables to paly around
+     */
     var cItems = [Category]()
     var pItems = [Product]()
     var selectedCat = [Int]()
@@ -27,14 +32,13 @@ class ViewController: UIViewController {
     var rankings = [[Int]]()
     var selectedSegmentIndex: Int = 0
     
+    //MARK: - View Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getData()
         viewSetUp(hideView: true)
         registerCollectionViewCell()
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
-//        sideView.addGestureRecognizer(tap)
-//        tableView.removeGestureRecognizer(tap)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +50,17 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    //MARK: - Custom Functions
+    
+    /**
+     * Get Data called first time from View Did Load
+     * It checks for network connectivity from Model Class
+     * If Network available then use Request class to call the API
+     * If netwrok not available read the local JSON file
+     * Once data is serialized, it will pass to Data Model to get Gategories
+     * Also will pass to another method to get the rankings
+     */
+    
     func getData() {
         startAnimating()
         if NetworkManager.isReachable() {
@@ -94,6 +109,15 @@ class ViewController: UIViewController {
 //        print(cItems.map{$0.products.count})
     }
     
+    /**
+     * The method is used to get all products or particular category products
+     * Boolean parameter need to pass to identify all Products or category products
+     * The Product variable will be prepared here
+     * The method will be called after getting data first time
+     * Second time when select the filter from Side Menu Table
+     * once product is ready, reload the collection view
+     */
+    
     func fetchProduct(all isAll: Bool, single isSingle: Bool) {
         pItems.removeAll()
         if isAll {
@@ -121,6 +145,14 @@ class ViewController: UIViewController {
         sortProductList(forSegment: selectedSegmentIndex)
         collectionView.reloadData()
     }
+    
+    /**
+     * The method is used to get all three types of ranking
+     * It's pre assumed here that there were three types of rankings
+     * Parameter as JSON response received from the Server
+     * rankings variable will be prepared here
+     * this variable is used to sort the product list as per segment selection
+     */
     
     func getRanking(json: [[String: Any]]) {
         for value in 0...json.count - 1 {
@@ -151,6 +183,11 @@ class ViewController: UIViewController {
         self.stopAnimating()
     }
     
+    /**
+     * The method is used to prepare the list of category ids, whose product need to be displayed
+     * parameter the index value of category items
+     */
+    
     func getSelectedIds(forIndex: Int) {
         if cItems[forIndex].products.count > 0 {
             selectedCat.append(cItems[forIndex].id!)
@@ -161,6 +198,12 @@ class ViewController: UIViewController {
         print(selectedCat)
         fetchProduct(all: false, single: true)
     }
+    
+    /**
+     * This method is used to fetch sub categories
+     * it will prepare the list of all categories by iterating through child categories
+     * finally we have those categories who doesn't have child
+     */
     
     func getSubIDs(from: [Int]) {
         for ids in from {
@@ -176,24 +219,38 @@ class ViewController: UIViewController {
         }
     }
     
+    /**
+     * The method is used to sort the product list based on ranking
+     * recieve the int parameter which will used to denote based on which ranking need to sort
+     */
+    
     func sortProductList(forSegment: Int) {
         let sorted = pItems.map{$0.id!}.reorder(by: rankings[forSegment])
         let ordering = Dictionary(uniqueKeysWithValues: sorted.enumerated().map { ($1, $0) })
         pItems = pItems.sorted{ ordering[$0.id!]! < ordering[$1.id!]! }
     }
     
+    /**
+     * This method u=is used to basic view setup
+     * here it is responsible to sho and hide the filter
+     * receive parameter as booloean to show and hide identification
+     */
+    
     func viewSetUp(hideView: Bool) {
         if !hideView {
             showHideBtn.setTitle("Filter Hide", for: .normal)
             sideView.isHidden = false
-//            viewXConstraint.constant = 0
         }else {
             showHideBtn.setTitle("Filter Show", for: .normal)
             sideView.isHidden = true
-//            viewXConstraint.constant = self.sideView.frame.size.width
         }
         tableView.reloadData()
     }
+    
+    /**
+     * this method is used to register table and collection view coustom cells
+     * also used to set the height and width of the coustom cell
+     */
     
     func registerCollectionViewCell() {
         tableView.estimatedRowHeight = 50
@@ -208,6 +265,10 @@ class ViewController: UIViewController {
         }
     }
     
+    /**
+     * The method is used to show activity indicator over the view
+     */
+    
     func startAnimating() {
         activityIndicator.center = self.view.center
         activityIndicator.hidesWhenStopped = true
@@ -218,13 +279,13 @@ class ViewController: UIViewController {
         UIApplication.shared.beginIgnoringInteractionEvents()
     }
     
+    /**
+     * the method is used to stop activity indicator and start interacrtions
+     */
+    
     func stopAnimating() {
         activityIndicator.stopAnimating()
         UIApplication.shared.endIgnoringInteractionEvents()
-    }
-    
-    @objc func handleTap(_ sender: UITapGestureRecognizer) {
-        viewSetUp(hideView: true)
     }
     
     //MARK:- Button Action

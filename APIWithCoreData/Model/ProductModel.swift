@@ -8,33 +8,6 @@
 
 import Foundation
 
-struct Variants {
-    var id: Int?
-    var name: String?
-    var size: Int?
-    var price: Int?
-}
-
-struct Products {
-    var id: Int?
-    var name: String?
-    var variants: [Variants]
-    var like_count: Int?
-    var view_count: Int?
-    var shared_count: Int?
-}
-
-struct ChildCategories {
-    var id: String?
-}
-
-struct Categories {
-    var id: Int?
-    var name: String?
-    var products: [Products]
-    var childCategories: [Int]
-}
-
 class MapData {
     var items = [Category]()
     
