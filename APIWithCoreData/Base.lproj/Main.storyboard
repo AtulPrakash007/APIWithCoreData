@@ -118,7 +118,6 @@
                         <outlet property="showHideBtn" destination="Ykc-Kk-BIr" id="Gz5-Cs-JfI"/>
                         <outlet property="sideView" destination="LMD-IG-Kkt" id="8fp-6i-bga"/>
                         <outlet property="tableView" destination="Gi9-vw-eDw" id="CHA-Dh-pBD"/>
-                        <outlet property="viewXConstraint" destination="pdm-XY-M7B" id="5Zr-eH-jqd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
