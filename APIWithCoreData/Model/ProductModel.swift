@@ -53,9 +53,6 @@ class Product {
     var id: Int?
     var name: String?
     var variants = [Variant]()
-    var like_count: Int?
-    var view_count: Int?
-    var shared_count: Int?
     
     init(json: [String: Any]) {
         self.id = json["id"] as? Int
@@ -64,9 +61,6 @@ class Product {
         if let variants = json["variants"] as? [[String: Any]] {
             self.variants = variants.map { Variant(json: $0) }
         }
-        self.like_count = 0
-        self.view_count = 0
-        self.shared_count = 0
     }
 }
 

@@ -20,3 +20,7 @@ let kViewCount = "view_count"
 let kOrderCount = "order_count"
 let kSharedCount = "shares"
 let kId = "id"
+
+let kFirstTime = "firstTime"
+let kCatSaved = "catSaved"
+let kRankSaved = "rankSaved"
